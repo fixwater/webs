@@ -1,20 +1,38 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+	"os"
+)
 import "fmt"
 import "flag"
 
+
 func main() {
 
-	defaultPortPtr := flag.String("p", "", "Port Number")
-	
+	PortPtr    := flag.String("p", "", "Port Number")
+	vFlagPtr   := flag.Bool("v", false, "Print Version")
+	dirFlagPtr := flag.String("d", "./", "Set Serve Dir")
+
 	flag.Parse()
+
+	vValue   := *vFlagPtr
+	dirValue := *dirFlagPtr
+	verStr   := "1.0.0"
+
+	//Print Version
+	if vValue  {
+		fmt.Println("Webs Server : V" + verStr)
+		os.Exit(0)
+	}
+
+
 	
 	portNum := "9090"
 	
 	// Port Number
-	if *defaultPortPtr != "" {
-		portNum = *defaultPortPtr
+	if *PortPtr != "" {
+		portNum = *PortPtr
 	} else {
 		portNum = "9090"
 	}
@@ -22,7 +40,11 @@ func main() {
 	fmt.Println()
 	fmt.Println("HTTP Server On :" + portNum + " Started .")
 	fmt.Println()
-	fmt.Println("Ver 1.0.0")
-	panic(http.ListenAndServe(":"+portNum, http.FileServer(http.Dir("./"))))
+	fmt.Println("Dir is " + dirValue);
+	fmt.Println()
+	fmt.Println("Ver " + verStr)
+
+	panic(http.ListenAndServe(":"+portNum, http.FileServer(http.Dir(dirValue))))
+
 }
 
